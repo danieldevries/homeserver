@@ -1,4 +1,5 @@
 acme.json
+*.env
 .*
 !.gitignore
 !.env.example
