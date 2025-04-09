@@ -11,9 +11,8 @@ services:
       TZ: 'Europe/Amsterdam'
       WEBPASSWORD: 'password'
     volumes:
-      - './etc-pihole:/etc/pihole'
-      - './etc-dnsmasq.d:/etc/dnsmasq.d'
+      - '/home/daniel/homeserver-data/pihole/etc-pihole:/etc/pihole'
+      - '/home/daniel/homeserver-data/pihole/etc-dnsmasq.d:/etc/dnsmasq.d'
     cap_add:
       - NET_ADMIN
     restart: unless-stopped
-

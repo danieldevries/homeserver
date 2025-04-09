@@ -16,22 +16,23 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - ./traefik/traefik.yml:/traefik.yml:ro
       - ./traefik/acme.json:/acme.json
+      - /home/daniel/homeserver-data/traefik/traefik.log:/var/log/traefik.log
+      - /home/daniel/homeserver-data/traefik/access.log:/var/log/access.log
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.traefik.entrypoints=http"
       - "traefik.http.routers.traefik.rule=Host(`traefik.${BASE_DOMAIN}`)"
-        #- "traefik.http.middlewares.traefik-auth.basicauth.users=${TRAEFIK_DASHBOARD_CREDENTIALS}"
       - "traefik.http.middlewares.traefik-https-redirect.redirectscheme.scheme=https"
       - "traefik.http.middlewares.sslheader.headers.customrequestheaders.X-Forwarded-Proto=https"
       - "traefik.http.routers.traefik.middlewares=traefik-https-redirect"
       - "traefik.http.routers.traefik-secure.entrypoints=https"
       - "traefik.http.routers.traefik-secure.rule=Host(`traefik.${BASE_DOMAIN}`)"
-        #- "traefik.http.routers.traefik-secure.middlewares=traefik-auth"
       - "traefik.http.routers.traefik-secure.tls=true"
       - "traefik.http.routers.traefik-secure.tls.certresolver=cloudflare"
       - "traefik.http.routers.traefik-secure.tls.domains[0].main=${BASE_DOMAIN}"
       - "traefik.http.routers.traefik-secure.tls.domains[0].sans=*.${BASE_DOMAIN}"
       - "traefik.http.routers.traefik-secure.service=api@internal"
+      - "traefik.http.routers.traefik-secure.middlewares=tinyauth"
 
   start-page:
     extends:
@@ -43,32 +44,33 @@ services:
       - "traefik.http.routers.startPage.entrypoints=https"
       - "traefik.http.routers.startPage.tls=true"
       - "traefik.http.services.startPage.loadbalancer.server.port=80"
+      - "traefik.http.routers.startPage.middlewares=tinyauth"
     networks:
       - proxy
 
-  freshrss:
+  tinyauth:
     extends:
-      file: apps/freshrss/docker-compose.yml
-      service: freshrss
+      file: apps/tinyauth/docker-compose.yml
+      service: tinyauth
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.freshrss.rule=Host(`freshrss.${BASE_DOMAIN}`)"
-      - "traefik.http.routers.freshrss.entrypoints=https"
-      - "traefik.http.routers.freshrss.tls=true"
-      - "traefik.http.services.freshrss.loadbalancer.server.port=80"
+      - "traefik.http.routers.tinyauth.rule=Host(`auth.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.tinyauth.entrypoints=https"
+      - "traefik.http.routers.tinyauth.tls=true"
+      - "traefik.http.middlewares.tinyauth.forwardauth.address=http://tinyauth:3000/api/auth/traefik"
     networks:
       - proxy
 
-  uptime-kuma:
-    extends:
-      file: apps/uptime-kuma/docker-compose.yml
-      service: uptime-kuma
+  whoami:
+    container_name: whoami
+    image: traefik/whoami:latest
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.uptimeKuma.rule=Host(`uptime-kuma.${BASE_DOMAIN}`)"
-      - "traefik.http.routers.uptimeKuma.entrypoints=https"
-      - "traefik.http.routers.uptimeKuma.tls=true"
-      - "traefik.http.services.uptimeKuma.loadbalancer.server.port=3001"
+      - "traefik.http.routers.whoami.rule=Host(`whoami.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.whoami.entrypoints=https"
+      - "traefik.http.routers.whoami.tls=true"
+      - "traefik.http.services.whoami.loadbalancer.server.port=80"
+      - "traefik.http.routers.whoami.middlewares=tinyauth"
     networks:
       - proxy
 

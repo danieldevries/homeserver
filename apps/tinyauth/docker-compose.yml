@@ -1,0 +1,6 @@
+services:
+  tinyauth:
+    container_name: tinyauth
+    image: ghcr.io/steveiliop56/tinyauth:v3
+    restart: unless-stopped
+    env_file: tinyauth.env

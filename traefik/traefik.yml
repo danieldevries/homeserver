@@ -29,3 +29,11 @@ certificatesResolvers:
         resolvers:
           - "1.1.1.1:53"
           - "1.0.0.1:53"
+log:
+  filePath: "/var/log/traefik.log"
+  level: INFO
+  noColor: true
+
+accessLog:
+  filePath: "/var/log/access.log"
+  addInternals: true
