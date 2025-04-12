@@ -34,6 +34,20 @@ services:
       - "traefik.http.routers.traefik-secure.service=api@internal"
       - "traefik.http.routers.traefik-secure.middlewares=tinyauth"
 
+  dozzle:
+    extends:
+      file: apps/dozzle/docker-compose.yml
+      service: dozzle
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dozzle.rule=Host(`dozzle.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.dozzle.entrypoints=https"
+      - "traefik.http.routers.dozzle.tls=true"
+      - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
+      - "traefik.http.routers.dozzle.middlewares=tinyauth"
+    networks:
+      - proxy
+
   start-page:
     extends:
       file: apps/start-page/docker-compose.yml
