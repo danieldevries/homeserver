@@ -2,6 +2,5 @@ services:
   start-page:
     image: nginx:1-alpine
     container_name: start-page
-    env_file: '.env'
     volumes:
       - /home/daniel/homeserver-data/start-page:/usr/share/nginx/html
