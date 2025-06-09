@@ -1,0 +1,74 @@
+- name: Home
+  hide-desktop-navigation: true
+  columns:
+    - size: small
+      widgets:
+        - type: calendar
+          first-day-of-week: monday
+
+    - size: full
+      widgets:
+        - type: search
+          search-engine: duckduckgo
+          bangs:
+            - title: YouTube
+              shortcut: "!yt"
+              url: https://www.youtube.com/results?search_query={QUERY}
+            - title: Wikipedia
+              shortcut: "!w"
+              url: https://en.wikipedia.org/w/index.php?search={QUERY}
+
+        - type: bookmarks
+          groups:
+            - title: FooBar
+              links:
+              - title: Gmail
+                url: https://mail.google.com/mail/u/0/
+              - title: Zoho
+                url: https://mail.zoho.com
+
+            - title: Homeserver
+              color: 10 70 50
+              links:
+                - title: Traefik
+                  url: https://traefik.local.danieldevries.net
+                - title: Dozzle
+                  url: https://dozzle.local.danieldevries.net
+                - title: PiHole
+                  url: http://192.168.178.151/admin
+
+            - title: Apps
+              color: 200 50 50
+              links:
+                - title: Transmission
+                  url: https://transmission.local.danieldevries.net
+                - title: Jackett
+                  url: https://jackett.local.danieldevries.net
+                - title: Karakeep
+                  url: https://karakeep.local.danieldevries.net
+                - title: Share
+                  url: https://share.local.danieldevries.net
+
+        - type: docker-containers
+          hide-by-default: false
+
+    - size: small
+      widgets:
+        - type: weather
+          location: Rotterdam, the Netherlands
+          units: metric
+          hour-format: 24h
+          hide-location: true
+
+        - type: server-stats
+          servers:
+            - type: local
+              name: Services
+
+                #- type: dns-stats
+                #  service: pihole-v6
+                #  allow-insecure: true
+                #  url: http://192.168.178.151
+                #  password: 
+                #  hour-format: 24h
+

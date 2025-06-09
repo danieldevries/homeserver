@@ -34,6 +34,20 @@ services:
       - "traefik.http.routers.traefik-secure.service=api@internal"
       - "traefik.http.routers.traefik-secure.middlewares=tinyauth"
 
+  glance:
+    extends:
+      file: apps/glance/docker-compose.yml
+      service: glance
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.glance.rule=Host(`glance.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.glance.entrypoints=https"
+      - "traefik.http.routers.glance.tls=true"
+      - "traefik.http.services.glance.loadbalancer.server.port=8080"
+      - "traefik.http.routers.glance.middlewares=tinyauth"
+    networks:
+      - proxy
+
   dozzle:
     extends:
       file: apps/dozzle/docker-compose.yml
