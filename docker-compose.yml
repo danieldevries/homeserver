@@ -40,7 +40,7 @@ services:
       service: glance
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.glance.rule=Host(`glance.${BASE_DOMAIN}`)"
+      - "traefik.http.routers.glance.rule=Host(`home.${BASE_DOMAIN}`)"
       - "traefik.http.routers.glance.entrypoints=https"
       - "traefik.http.routers.glance.tls=true"
       - "traefik.http.services.glance.loadbalancer.server.port=8080"
@@ -59,20 +59,6 @@ services:
       - "traefik.http.routers.dozzle.tls=true"
       - "traefik.http.services.dozzle.loadbalancer.server.port=8080"
       - "traefik.http.routers.dozzle.middlewares=tinyauth"
-    networks:
-      - proxy
-
-  start-page:
-    extends:
-      file: apps/start-page/docker-compose.yml
-      service: start-page
-    labels:
-      - "traefik.enable=true"
-      - "traefik.http.routers.startPage.rule=Host(`start.${BASE_DOMAIN}`)"
-      - "traefik.http.routers.startPage.entrypoints=https"
-      - "traefik.http.routers.startPage.tls=true"
-      - "traefik.http.services.startPage.loadbalancer.server.port=80"
-      - "traefik.http.routers.startPage.middlewares=tinyauth"
     networks:
       - proxy
 
